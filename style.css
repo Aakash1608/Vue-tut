@@ -1,0 +1,17 @@
+nav {
+    display: flex;
+    width: 100vw;
+    padding: 1vh;
+    align-items: center;
+    background-color: whitesmoke;
+    justify-content: space-between;
+}
+a {
+    font-size: 18px;
+    margin: 0 2vw;
+    text-decoration: none;
+}
+.nav-links {
+    display: flex;
+    list-style: none;
+}
