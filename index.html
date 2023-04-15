@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ"
+      crossorigin="anonymous"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.30/vue.global.min.js"></script>
+    <link rel="stylesheet" href="style.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <navbar :pages="pages" :activePage="activePage" :nav-link-click="(index) => activePage = index"></navbar>
+
+    <page-viewer
+      :page-title="pages[activePage].pageTitle"
+      :page-content="pages[activePage].pageDesc"
+    ></page-viewer>
+
+    <script>
+      let app = Vue.createApp({
+        // data is like react state
+        computed: {
+          navbarToggle() {
+            if (this.useDarkNav) {
+              return "dark";
+            } else {
+              return "";
+            }
+          },
+        },
+        data() {
+          return {
+            activePage: 0,
+            pages: [
+              {
+                pageTitle: "Hello Vue",
+                pageDesc: "Amazing world of Vue",
+                link: {
+                  text: "Home",
+                  url: "Home.html",
+                },
+              },
+              {
+                pageTitle: "About Page",
+                pageDesc: "Amazing About Page of Vue",
+                link: {
+                  text: "About",
+                  url: "About.html",
+                },
+              },
+              {
+                pageTitle: "Contact Page",
+                pageDesc: "Amazing Contact Page of Vue",
+                link: {
+                  text: "Contact",
+                  url: "Contact.html",
+                },
+              },
+            ],
+          };
+        },
+      });
+      app.component("navbar", {
+        props: ['pages', 'activePage', 'navLinkClick'],
+        // props are read-only stuff so we cant directly change activePage value hence we use navLinkChange
+        template: `
+        <nav class="navbar navbar-expand-lg bg-body-tertiary" :class="{'bg-dark': useDarkNav}"
+    :data-bs-theme="[useDarkNav ? 'dark' : '']">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Navbar</a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <!-- use v-for in the element that u wanna replicate -->
+            <!-- for setting event in vue we can use v-on:eventName or  @eventName and follow uo with .to apply some methods line @click.prevent (which prevent default options) -->
+            <li v-for="(page, index) in pages" class="nav-item" :key="index">
+              <!-- for binding any html attributes we use v-bind:attributr or simply ":attribute"  -->
+              <a class="nav-link" :class="{active: activePage==index}" aria-current="page" :href="page.link.url" @click.prevent="navLinkClick(index)"
+                >{{ page.link.text }}</a
+              >
+            </li>
+            <!-- :Class condition is 'className: condition when to apply the class' -->
+          </ul>
+          <form action="" class="d-flex">
+            <button class="btn btn-primary" @click.prevent="useDarkNav = !useDarkNav">
+                Toggle Navbar
+            </button>
+          </form>
+        </div>
+      </div>
+    </nav>
+        `,
+        data() {
+            return {
+                useDarkNav: false,
+            }
+        }
+      });
+      //   following is the way to create components in vue
+      app.component("page-viewer", {
+        props: ["pageTitle", "pageContent"],
+        template: `
+        <div class="root">
+            <h1>{{pageTitle}}</h1>
+            <p>{{pageContent}}</p>
+        </div>
+        `,
+      });
+      app.mount("body");
+    </script>
+  </body>
+</html>
